@@ -20,8 +20,8 @@ def print_board(game):
 def print_game(game):
     os.system("cls")
     print("History:")
-    print("\tPlayer ",Node.players[player_i]," : ",history[player_i])
-    print("\tPlayer ",Node.players[1-player_i]," : ",history[1-player_i])
+    print("\tPlayer ",Node.players[player_i],"     : ",history[player_i])
+    print("\tPlayer ",Node.players[1-player_i],"<ai> : ",history[1-player_i])
     print("><"*25,'\n')
     print_board(game)
 
@@ -30,8 +30,7 @@ winner = None
 player_i=0
 root=None
 history=[[],[]]
-num_sims = 1000
-sims_count = 0
+num_sims = 100
 while winner is None:
     print_game(GAME)    
     print('Turn : ',Node.players[player_i])
@@ -57,11 +56,10 @@ while winner is None:
     else:
         root = Node(copy.deepcopy(GAME),1-player_i)
 
-    root_choices = MCTS_sim(root,num_sims,sims_count)
+    root_choices = MCTS_sim(root,num_sims)
     if len(root_choices)==0:
         break
     root = random.choice(root_choices)
-    sims_count+=num_sims
     i,j = root.pos
 
     history[1-player_i].append(i*3+j+1)
