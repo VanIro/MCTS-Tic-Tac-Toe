@@ -28,7 +28,8 @@ def simulate(game, player_i):
     while result is None:
         choices = get_childs(game)
         if len(choices)==0: 
-            result=0
+            result=game_result(game)
+            if result is None: result=0
         else:
             i,j = random.choice(choices)
             game[i][j] = player_i
@@ -161,18 +162,18 @@ def MCTS_sim(root:Node,NT:int, Tbeg:int):
     return priority_childs[0]
 
 
-def print_tree(root:Node):
-    node = root
-    while True:
-        childs = node.childs
-        if len(childs)==0:
-            break
-        max_childs=[]
-        max_val=-1
-        for nd in childs:
-            val = nd.getUCB(t)
-            if val>max_val:
-                max_childs=[nd]
-            elif val==max_val:
-                max_childs.append(nd)
-        node = random.choice(max_childs)
+# def print_tree(root:Node):
+#     node = root
+#     while True:
+#         childs = node.childs
+#         if len(childs)==0:
+#             break
+#         max_childs=[]
+#         max_val=-1
+#         for nd in childs:
+#             val = nd.getUCB(t)
+#             if val>max_val:
+#                 max_childs=[nd]
+#             elif val==max_val:
+#                 max_childs.append(nd)
+#         node = random.choice(max_childs)
