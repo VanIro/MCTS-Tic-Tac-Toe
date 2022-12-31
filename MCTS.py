@@ -29,7 +29,7 @@ def simulate(game, player_i):
         choices = get_childs(game)
         if len(choices)==0: 
             result=game_result(game)
-            if result is None: result=0
+            if result is None: break #this is a draw
         else:
             i,j = random.choice(choices)
             game[i][j] = player_i
@@ -79,6 +79,7 @@ class Node:
     def simulate(self):
         self.n_sims+=1
         result = simulate(copy.deepcopy(self.game), self.player_i)
+
         if result == Node.players[self.player_i]:
             self.won()
             return 1
