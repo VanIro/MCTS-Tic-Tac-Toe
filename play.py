@@ -21,7 +21,7 @@ while True:
         if int(inp)==1:
             player_human_i=0
     except ValueError:
-        if len(inp)>0 and inp[0].upper=='Q':
+        if len(inp)>0 and inp[0].upper()=='Q':
             break
     while winner is None:
         print_game(GAME,history,player_human_i) 
