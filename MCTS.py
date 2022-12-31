@@ -91,7 +91,7 @@ class Node:
         return game_result(self.game)
 
     def won(self):
-        self.wins+=10
+        self.wins+=1
     def drawn(self):
         self.draws+=1
     def lost(self):
@@ -120,7 +120,7 @@ class Node:
         kw=1
         kd=0
         kl=0
-        exploit_score =  (kw*self.wins + kd*self.draws -kl*self.losses)/(self.n_sims + (kw-1)*self.wins + (kd)*self.draws)
+        exploit_score =  self.wins/self.n_sims#(kw*self.wins + kd*self.draws -kl*self.losses)/(self.n_sims + (kw-1)*self.wins + (kd)*self.draws)
         return exploit_score + self.c*(math.log(t)/self.n_sims)**.5
     
     def expand(self):
@@ -193,7 +193,7 @@ def MCTS_sim(root:Node,NT:int, Tbeg:int):
         
         t+=1
     #get UCB position
-    priority_childs = sorted(root.childs,key=lambda nd: nd.get_sim_score(),reverse=True)
+    priority_childs = sorted(root.childs,key=lambda nd: nd.get_sim_score(),reverse=False)
     if len(priority_childs)>0:
         max_wins = priority_childs[0].get_sim_score()
         priority_childs = [child for child in priority_childs if child.get_sim_score()==max_wins]
