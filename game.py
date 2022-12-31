@@ -38,7 +38,6 @@ while winner is None:
     inp = int(input("Enter the position where you want to play : "))-1
     assert inp<9 and inp>=0
     move = (inp//3,inp%3)
-    # print(Node.players[player_i],"'s move:",inp+1)
     print('\n','*'*60)
     GAME[move[0]][move[1]] = Node.players[player_i]
     history[player_i].append(move[0]*3+move[1]+1)
@@ -47,22 +46,16 @@ while winner is None:
         break
 
     print_game(GAME)
-    
-    # player_i=1-player_i
 
     if root is not None:
         #find the child that matches the current state of the game
+        #this was done to make use of information from previous simulations
         try:
             root = [child for child in root.childs if child.pos==move][0]
         except IndexError:
             break
-        # print_board(root.game)
-        #parent = root.parent
-        #del parent
-        #root.parent = None
     else:
         root = Node(copy.deepcopy(GAME),1-player_i)
-    # root = Node(copy.deepcopy(GAME),1-player_i)
 
     root_choices = MCTS_sim(root,num_sims,sims_count)
     if len(root_choices)==0:
@@ -76,8 +69,6 @@ while winner is None:
     winner = game_result(GAME)
     if winner is not None:
         break
-
-    # input("Press any key for next move")
 
 os.system("cls")
 print_game(GAME)
