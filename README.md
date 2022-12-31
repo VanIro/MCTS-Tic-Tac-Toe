@@ -10,6 +10,6 @@ In this case, with just 80 simulations per move(it can be reduced further, towar
                                                                         
 ## Below is a sample of a game:
 
-![image](https://user-images.githubusercontent.com/61639823/210151431-4ed2b3d6-e048-4775-b50b-72cecec77472.png)
+![image](https://user-images.githubusercontent.com/61639823/210153209-118a39a6-6b4c-4926-86b3-44a6d66fc640.png)
 
 ![image](https://user-images.githubusercontent.com/61639823/210151439-b261e607-c1c7-4b21-bf80-20f49e288012.png)
