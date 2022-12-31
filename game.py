@@ -30,7 +30,7 @@ winner = None
 player_i=0
 root=None
 history=[[],[]]
-num_sims = 100
+num_sims = 1000
 sims_count = 0
 while winner is None:
     print_game(GAME)    
@@ -79,9 +79,10 @@ while winner is None:
 
 os.system("cls")
 print_game(GAME)
-if winner is not None:
-    print("Winner : ",winner)
-else:
+
+if winner in [-1,None]:
     print("It was a draw.")
+else:
+    print("Winner : ",Node.players[winner])
 
 

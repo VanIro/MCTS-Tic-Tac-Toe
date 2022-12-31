@@ -1,17 +1,24 @@
-
 #MCTS
 import copy
 import math
 import random
 
-
+#returns -1 for draw, index of winner in Node.players if someone has won, else None 
 def game_result( game):
     winner=None
+    no_draw = False
     for g in Node.GameChecks:
         g_line = [game[gi[0]][gi[1]] for gi in g]
         if all_equal(g_line): winner = g_line[0] if g_line[0] in Node.players else None
+
+        p1, p2 = Node.players
+        if not (p1 in g_line and p2 in g_line):
+            no_draw = True
+
         if winner is not None: break
-    return winner
+    
+    if not no_draw: return -1
+    elif winner is not None: return Node.players.index(winner)
 
 def all_equal(A):
     for i in range(len(A)-1):
@@ -29,7 +36,6 @@ def simulate(game, player_i):
         choices = get_childs(game)
         if len(choices)==0: 
             result=game_result(game)
-            if result is None: break #this is a draw
         else:
             i,j = random.choice(choices)
             game[i][j] = player_i
@@ -83,19 +89,24 @@ class Node:
         # self.n_sims+=1
         result = simulate(copy.deepcopy(self.game), self.player_i)
 
-        if result == Node.players[self.player_i]:
+        if result == self.player_i:
             # self.won()
             return 1
-        elif result == Node.players[1-self.player_i]:
+        elif result == 1-self.player_i:
             # self.lost()
             return -1
         return 0
+
+    def get_sim_score(self):
+        return 2*self.wins+self.draws-self.losses
 
     def getUCB(self,t):
         if self.n_sims==0: return float('inf')
         kw=1
         kd=1
-        return (kw*self.wins + kd*self.draws -self.losses)/(self.n_sims + (kw-1)*self.wins + (kd-1)*self.draws) + self.c*(math.log(t)/self.n_sims)**.5
+        kl=2
+        exploit_score =  (kw*self.wins + kd*self.draws -kl*self.losses)/(self.n_sims + (kw-1)*self.wins + (kd)*self.draws*0)
+        return exploit_score + self.c*(math.log(t)/self.n_sims)**.5
     
     def expand(self):
         childs = self.get_childs()
@@ -125,7 +136,7 @@ def MCTS_sim(root:Node,NT:int, Tbeg:int):
             if len(childs)==0:
                 break
             max_childs=[]
-            max_val=-1
+            max_val=childs[0].getUCB(t)
             for nd in childs:
                 val = nd.getUCB(t)
                 if val>max_val:
@@ -166,10 +177,10 @@ def MCTS_sim(root:Node,NT:int, Tbeg:int):
         
         t+=1
     #get UCB position
-    priority_childs = sorted(root.childs,key=lambda nd: nd.wins,reverse=True)
+    priority_childs = sorted(root.childs,key=lambda nd: nd.get_sim_score(),reverse=True)
     if len(priority_childs)>0:
-        max_wins = priority_childs[0].wins
-        priority_childs = [child for child in priority_childs if child.wins==max_wins]
+        max_wins = priority_childs[0].get_sim_score()
+        priority_childs = [child for child in priority_childs if child.get_sim_score()==max_wins]
     print(root.childs)
     return priority_childs
 
