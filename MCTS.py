@@ -206,7 +206,7 @@ def MCTS_sim(root:Node,NT:int, Tbeg:int):
     if len(priority_childs)>0:
         max_wins = priority_childs[0].get_sim_score()
         priority_childs = [child for child in priority_childs if child.get_sim_score()==max_wins]
-    print(root.childs)
+    # print(root.childs)
     return priority_childs
 
 

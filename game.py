@@ -77,7 +77,7 @@ while winner is None:
     if winner is not None:
         break
 
-    input("Press any key for next move")
+    # input("Press any key for next move")
 
 os.system("cls")
 print_game(GAME)
