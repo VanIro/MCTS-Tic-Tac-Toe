@@ -161,7 +161,7 @@ def MCTS_sim(root:Node,NT:int, Tbeg:int):
                     parent.drawn()
             parent.n_sims+=1
             parent = parent.parent
-            result = -result # win for child is loss for parent and so on...
+            # result = -result # win for child is loss for parent and so on...
 
         
         t+=1
