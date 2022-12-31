@@ -143,10 +143,10 @@ class Node:
 
 
 def MCTS_sim(root:Node,NT:int, Tbeg:int):
-    t=Tbeg
+    t=0
     Tmax = Tbeg + NT
     root.expand()
-    while t<Tmax:
+    while t<NT:
         #selection
         node = root
         while True:

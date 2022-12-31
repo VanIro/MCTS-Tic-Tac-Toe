@@ -50,19 +50,19 @@ while winner is None:
     
     # player_i=1-player_i
 
-    # if False:#root is not None:
-    #     #find the child that matches the current state of the game
-    #     try:
-    #         root = [child for child in root.childs if child.pos==move][0]
-    #     except IndexError:
-    #         break
-    #     # print_board(root.game)
-    #     #parent = root.parent
-    #     #del parent
-    #     #root.parent = None
-    # else:
-    #     pass
-    root = Node(copy.deepcopy(GAME),1-player_i)
+    if root is not None:
+        #find the child that matches the current state of the game
+        try:
+            root = [child for child in root.childs if child.pos==move][0]
+        except IndexError:
+            break
+        # print_board(root.game)
+        #parent = root.parent
+        #del parent
+        #root.parent = None
+    else:
+        root = Node(copy.deepcopy(GAME),1-player_i)
+    # root = Node(copy.deepcopy(GAME),1-player_i)
 
     root_choices = MCTS_sim(root,num_sims,sims_count)
     if len(root_choices)==0:
