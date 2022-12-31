@@ -30,7 +30,7 @@ winner = None
 player_i=0
 root=None
 history=[[],[]]
-num_sims = 20
+num_sims = 100
 sims_count = 0
 while winner is None:
     print_game(GAME)    
@@ -62,7 +62,10 @@ while winner is None:
     else:
         root = Node(copy.deepcopy(GAME),1-player_i)
 
-    root = MCTS_sim(root,num_sims,sims_count)
+    root_choices = MCTS_sim(root,num_sims,sims_count)
+    if len(root_choices)==0:
+        break
+    root = random.choice(root_choices)
     sims_count+=num_sims
     i,j = root.pos
 

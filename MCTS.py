@@ -93,7 +93,9 @@ class Node:
 
     def getUCB(self,t):
         if self.n_sims==0: return float('inf')
-        return (self.wins-self.losses)/self.n_sims + self.c*(math.log(t)/self.n_sims)**.5
+        kw=1
+        kd=1
+        return (kw*self.wins + kd*self.draws -self.losses)/(self.n_sims + (kw-1)*self.wins + (kd-1)*self.draws) + self.c*(math.log(t)/self.n_sims)**.5
     
     def expand(self):
         childs = self.get_childs()
@@ -164,9 +166,12 @@ def MCTS_sim(root:Node,NT:int, Tbeg:int):
         
         t+=1
     #get UCB position
-    priority_childs = sorted(root.childs,key=lambda nd: nd.n_sims,reverse=True)
+    priority_childs = sorted(root.childs,key=lambda nd: nd.wins,reverse=True)
+    if len(priority_childs)>0:
+        max_wins = priority_childs[0].wins
+        priority_childs = [child for child in priority_childs if child.wins==max_wins]
     print(root.childs)
-    return priority_childs[0]
+    return priority_childs
 
 
 # def print_tree(root:Node):
