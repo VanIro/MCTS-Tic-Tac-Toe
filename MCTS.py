@@ -3,44 +3,11 @@ import copy
 import math
 import random
 
-#returns -1 for draw, index of winner in Node.players if someone has won, else None 
-def game_result( game):
-    winner=None
-    no_draw = False
-    for g in Node.GameChecks:
-        g_line = [game[gi[0]][gi[1]] for gi in g]
-        if all_equal(g_line): winner = g_line[0] if g_line[0] in Node.players else None
-
-        p1, p2 = Node.players
-        if not (p1 in g_line and p2 in g_line):
-            no_draw = True
-
-        if winner is not None: break
-    
-    if not no_draw: return -1
-    elif winner is not None: return Node.players.index(winner)
-
-def all_equal(A):
-    for i in range(len(A)-1):
-        if not A[i]==A[i+1]:
-            return False
-    return True
-
-def get_childs(game):
-    return [(i,j) for i in range(3) for j in range(3) if game[i][j] == 0]
-
-def print_board(game):
-    for r,row in enumerate(game):
-        for cell in row:
-            print(cell, end="\t")
-        print("/*\\\t",end='')
-        for i in range(3):
-            print(i+3*r + 1 if row[i]==0 else 'X', end="\t")
-        print('')
-    print("="*50)
+from utils import game_result,get_childs
+from game import GameSettings
 
 def simulate(game, player_i):
-    # print("Simulating for player",Node.players[player_i],"...")
+    # print("Simulating for player",GameSettings[player_i],"...")
     result=None
     while result is None:
         choices = get_childs(game)
@@ -48,26 +15,21 @@ def simulate(game, player_i):
             result=game_result(game)
         else:
             i,j = random.choice(choices)
-            game[i][j] = Node.players[player_i]
+            game[i][j] = GameSettings.players[player_i]
             result = game_result(game)
             player_i = 1-player_i
     
     # print_board(game)
     # print("Result: ",end='')
     # if result==-1: print("Draw")
-    # else: print("Player ",Node.players[result]," wins.")
+    # else: print("Player ",GameSettings[result]," wins.")
     # print("<"*50)
 
     return result
 
 
 class Node:
-    c=3**.5
-    players = [1,2]
-    GameChecks = [[(i,j)for j in range(3)] for i in range(3)]+\
-        [[(j,i)for j in range(3)] for i in range(3)]+\
-        [[(i,i) for i in range(3)]]+[[(i,2-i) for i in range(3)]]
-
+    c=2**.5
     def __init__(self,game,player_i,pos=None,parent=None) -> None:
         self.wins=0
         self.losses=0
@@ -80,7 +42,7 @@ class Node:
         self.player_i = player_i
 
     def __repr__(self):
-        return f"Node<{self.pos[0]*3+self.pos[1]+1}/{9-len(self.get_childs())}>({Node.players[self.player_i]}) [{self.wins}/{self.n_sims}]"
+        return f"Node<{self.pos[0]*3+self.pos[1]+1}/{9-len(self.get_childs())}>({GameSettings[self.player_i]}) [{self.wins}/{self.n_sims}]"
   
     
     
@@ -124,7 +86,7 @@ class Node:
         next_player_i = 1-self.player_i        
         for i,j in self.get_childs():
             game = copy.deepcopy(self.game)
-            game[i][j]=self.players[self.player_i]
+            game[i][j]=GameSettings.players[self.player_i]
             nd = Node(game,next_player_i,(i,j),self)
             self.childs.append(nd)
         return True
