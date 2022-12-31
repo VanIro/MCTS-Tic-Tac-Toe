@@ -5,7 +5,7 @@ This repo implements a tic tac toe ai player using Monte Carlo Tree Search algor
 Unlike minimax algorithm, which needs to create a complete game tree from a game state to take the optimal decision, MCTS just expands the better parts 
 of the tree based on a certain number of simulations(the more the better).
                                                                        
-The ai is very good and I haven't won against it. You are free to try...
+In this case, with just 80 simulations per move(it can be reduced further, as the later stages of the game have less choices) the ai is playing very good and I haven't won against it. You are encouraged to try against it...
                                                                         
 ## Below is a sample of a game:
 
