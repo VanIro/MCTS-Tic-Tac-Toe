@@ -49,6 +49,7 @@ class Node:
     def __init__(self,game,player_i,pos=None,parent=None) -> None:
         self.wins=0
         self.losses=0
+        self.draws=0
         self.n_sims=0
         self.game = game#copy.deepcopy(game)
         self.parent = parent
@@ -70,6 +71,8 @@ class Node:
 
     def won(self):
         self.wins+=1
+    def drawn(self):
+        self.draws+=1
     def lost(self):
         self.losses+=1
         # self.wins-=1
@@ -77,14 +80,14 @@ class Node:
    
 
     def simulate(self):
-        self.n_sims+=1
+        # self.n_sims+=1
         result = simulate(copy.deepcopy(self.game), self.player_i)
 
         if result == Node.players[self.player_i]:
-            self.won()
+            # self.won()
             return 1
         elif result == Node.players[1-self.player_i]:
-            self.lost()
+            # self.lost()
             return -1
         return 0
 
@@ -137,23 +140,26 @@ def MCTS_sim(root:Node,NT:int, Tbeg:int):
 
         #simulation
         childs2 = node.childs
-        if len(childs)>0:
+        if len(childs2)>0:
             child = random.choice(childs2)
             result = child.simulate()
         else:
             result = 0 #draw
+            child = node
 
         #BackPropagation
-        parent = child.parent
+        parent = child
         while parent is not None:
-            result = -result # win for child is loss for parent and so on...
             match result:
                 case 1:
                     parent.won()
                 case -1:
                     parent.lost()
+                case 0:
+                    parent.drawn()
             parent.n_sims+=1
             parent = parent.parent
+            result = -result # win for child is loss for parent and so on...
 
         
         t+=1

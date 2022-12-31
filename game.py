@@ -51,7 +51,10 @@ while winner is None:
     # player_i=1-player_i
     if root is not None:
         #find the child that matches the current state of the game
-        root = [child for child in root.childs if child.pos==move][0]
+        try:
+            root = [child for child in root.childs if child.pos==move][0]
+        except IndexError:
+            break
         # print_board(root.game)
         #parent = root.parent
         #del parent
@@ -73,6 +76,9 @@ while winner is None:
 
 os.system("cls")
 print_game(GAME)
-print("Winner : ",winner)
+if winner is not None:
+    print("Winner : ",winner)
+else:
+    print("It was a draw.")
 
 
