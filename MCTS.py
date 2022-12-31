@@ -40,7 +40,7 @@ def print_board(game):
     print("="*50)
 
 def simulate(game, player_i):
-
+    # print("Simulating for player",Node.players[player_i],"...")
     result=None
     while result is None:
         choices = get_childs(game)
@@ -52,16 +52,17 @@ def simulate(game, player_i):
             result = game_result(game)
             player_i = 1-player_i
     
-    # print("Simulating...")
     # print_board(game)
-    # print("Result: ",result)
+    # print("Result: ",end='')
+    # if result==-1: print("Draw")
+    # else: print("Player ",Node.players[result]," wins.")
     # print("<"*50)
 
     return result
 
 
 class Node:
-    c=2**.5
+    c=3**.5
     players = [1,2]
     GameChecks = [[(i,j)for j in range(3)] for i in range(3)]+\
         [[(j,i)for j in range(3)] for i in range(3)]+\
@@ -79,7 +80,7 @@ class Node:
         self.player_i = player_i
 
     def __repr__(self):
-        return "Node< "+str(self.pos[0]*3+self.pos[1]+1)+"> ["+str(self.wins)+'/'+str(self.n_sims)+' ]'
+        return f"Node<{self.pos[0]*3+self.pos[1]+1}/{9-len(self.get_childs())}>({Node.players[self.player_i]}) [{self.wins}/{self.n_sims}]"
   
     
     
@@ -102,6 +103,7 @@ class Node:
     #returns 1 for win, -1 for loss and 0 for draw
     def simulate(self):
         # self.n_sims+=1
+        # print(self.pos[0]*3+self.pos[1]+1)
         result = simulate(copy.deepcopy(self.game), self.player_i)
 
         if result == self.player_i:
@@ -143,6 +145,7 @@ class Node:
 def MCTS_sim(root:Node,NT:int, Tbeg:int):
     t=Tbeg
     Tmax = Tbeg + NT
+    root.expand()
     while t<Tmax:
         #selection
         node = root
@@ -159,18 +162,24 @@ def MCTS_sim(root:Node,NT:int, Tbeg:int):
                     max_childs=[nd]
                 elif val==max_val:
                     max_childs.append(nd)
-            # print("selection:")
+            # print("selection:",end='')
             # print(max_val,max_childs)
             node = random.choice(max_childs)
         
         #expansion
-        node.expand()
+        if node.n_sims>0:
+            node.expand()
+        else:
+            child = node
+        # print(node.childs)
 
         #simulation
         childs2 = node.childs
         if len(childs2)>0:
             child = random.choice(childs2)
             # print(child.pos[0]*3+child.pos[1]+1)
+            result = child.simulate()
+        elif node.n_sims==0:
             result = child.simulate()
         else:
             result = 0 #draw
